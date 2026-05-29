@@ -19,6 +19,9 @@ frontend/.angular/
 # Uploads (runtime file storage)
 uploads/
 
+# Claude Code
+.claude/
+
 # IDE
 .idea/
 .vscode/
