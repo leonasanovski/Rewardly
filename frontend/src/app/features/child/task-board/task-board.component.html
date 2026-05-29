@@ -1,0 +1,110 @@
+<app-child-nav />
+
+<div class="fq-page">
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="spinner-border fq-spinner" role="status"></div>
+      <p class="mt-2 text-secondary-fq">Loading tasks...</p>
+    </div>
+  } @else if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  } @else {
+
+    <!-- To Do -->
+    <section class="mb-5">
+      <div class="d-flex align-items-center mb-3">
+        <h5 class="fw-bold mb-0">To Do</h5>
+        <span class="fq-badge-open fq-badge-count ms-2">{{ todoTasks.length }}</span>
+      </div>
+      @if (todoTasks.length === 0) {
+        <p class="text-secondary-fq fst-italic">No pending tasks — great job!</p>
+      } @else {
+        <div class="row g-3">
+          @for (task of todoTasks; track task.id) {
+            <div class="col-12 col-sm-6 col-lg-4">
+              <div class="fq-card-clickable h-100" [routerLink]="['/child/tasks', task.id]">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h6 class="mb-0 fw-semibold">{{ task.title }}</h6>
+                  <span class="ms-2 flex-shrink-0" [ngClass]="statusBadgeClass(task.status)">
+                    {{ statusLabel(task.status) }}
+                  </span>
+                </div>
+                <span [ngClass]="categoryBadgeClass(task.category)" class="mb-2">
+                  {{ categoryLabels[task.category] }}
+                </span>
+                <div class="fq-token-badge mt-2 d-inline-flex">{{ task.tokenValue }}</div>
+                @if (task.dueDateNote) {
+                  <div class="text-secondary-fq small mt-2">Due: {{ task.dueDateNote }}</div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- Submitted -->
+    <section class="mb-5">
+      <div class="d-flex align-items-center mb-3">
+        <h5 class="fw-bold mb-0">Submitted</h5>
+        <span class="fq-badge-done fq-badge-count ms-2">{{ submittedTasks.length }}</span>
+      </div>
+      @if (submittedTasks.length === 0) {
+        <p class="text-secondary-fq fst-italic">No tasks waiting for review.</p>
+      } @else {
+        <div class="row g-3">
+          @for (task of submittedTasks; track task.id) {
+            <div class="col-12 col-sm-6 col-lg-4">
+              <div class="fq-card-clickable h-100" [routerLink]="['/child/tasks', task.id]">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h6 class="mb-0 fw-semibold">{{ task.title }}</h6>
+                  <span class="fq-badge-done ms-2">Submitted</span>
+                </div>
+                <span [ngClass]="categoryBadgeClass(task.category)" class="mb-2">
+                  {{ categoryLabels[task.category] }}
+                </span>
+                <div class="fq-token-badge mt-2 d-inline-flex">{{ task.tokenValue }}</div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- Completed -->
+    <section class="mb-5">
+      <div class="d-flex align-items-center mb-3">
+        <h5 class="fw-bold mb-0">Completed</h5>
+        <span class="fq-badge-reviewed fq-badge-count ms-2">{{ completedTasks.length }}</span>
+      </div>
+      @if (completedTasks.length === 0) {
+        <p class="text-secondary-fq fst-italic">No completed tasks yet.</p>
+      } @else {
+        <div class="row g-3">
+          @for (task of completedTasks; track task.id) {
+            <div class="col-12 col-sm-6 col-lg-4">
+              <div class="fq-card-clickable h-100" [routerLink]="['/child/tasks', task.id]">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h6 class="mb-0 fw-semibold">{{ task.title }}</h6>
+                  <span class="fq-badge-reviewed ms-2">Reviewed</span>
+                </div>
+                <span [ngClass]="categoryBadgeClass(task.category)" class="mb-2">
+                  {{ categoryLabels[task.category] }}
+                </span>
+                <div class="mt-2 d-flex gap-3 align-items-center flex-wrap">
+                  @if (task.tokensEarned !== null && task.tokensEarned !== undefined) {
+                    <span class="fq-token-badge d-inline-flex">+{{ task.tokensEarned }} earned</span>
+                  }
+                  @if (task.parentRating) {
+                    <app-star-rating [rating]="task.parentRating" [readonly]="true" />
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+  }
+</div>

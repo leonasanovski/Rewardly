@@ -1,0 +1,152 @@
+<app-parent-nav />
+
+<div class="fq-page">
+  <a routerLink="/parent/tasks" class="btn btn-sm btn-outline-secondary mb-4">&larr; Back to Tasks</a>
+
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="spinner-border fq-spinner" role="status"></div>
+    </div>
+  }
+
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  @if (successMessage) {
+    <div class="alert alert-success">{{ successMessage }}</div>
+  }
+
+  @if (task && !loading && !successMessage) {
+
+    <!-- ── Section 1: Ticket Summary ── -->
+    <div class="card mb-4">
+      <div class="card-header fw-semibold">Task Summary</div>
+      <div class="card-body">
+        <h5 class="fw-bold mb-1">{{ task.title }}</h5>
+        <p class="text-secondary-fq mb-3">{{ task.description }}</p>
+
+        <div class="row g-3">
+          <div class="col-6 col-md-3">
+            <div class="fq-section-label">Category</div>
+            <span [ngClass]="categoryBadgeClass(task.category)">{{ categoryLabels[task.category] }}</span>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="fq-section-label">Max tokens</div>
+            <span class="fq-token-badge d-inline-flex">{{ task.tokenValue }}</span>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="fq-section-label">Due date note</div>
+            <div class="fq-info-block">{{ task.dueDateNote }}</div>
+          </div>
+          @if (task.startedAt) {
+            <div class="col-6">
+              <div class="fq-section-label">Started</div>
+              <div>{{ task.startedAt | date:'medium' }}</div>
+            </div>
+          }
+          @if (task.finishedAt) {
+            <div class="col-6">
+              <div class="fq-section-label">Finished</div>
+              <div>{{ task.finishedAt | date:'medium' }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Section 2: Child Submission ── -->
+    <div class="card mb-4">
+      <div class="card-header fw-semibold">
+        Submitted by {{ task.assignedTo.fullName }}
+      </div>
+      <div class="card-body">
+
+        <div class="mb-4">
+          <div class="fq-section-label">What did you do?</div>
+          <div class="p-3 bg-surface rounded child-note-block">{{ task.childNote }}</div>
+        </div>
+
+        @if (attachments.length > 0) {
+          <div class="mb-4">
+            <div class="fq-section-label">Attachments</div>
+            <ul class="list-unstyled mb-0">
+              @for (att of attachments; track att.id) {
+                <li class="d-flex align-items-center gap-2 py-1">
+                  <span>&#128206;</span>
+                  <span class="small flex-grow-1">{{ att.fileName }}
+                    <span class="text-secondary-fq ms-1">({{ att.fileType }})</span>
+                  </span>
+                  <button
+                    class="btn btn-sm btn-outline-primary flex-shrink-0"
+                    (click)="downloadAttachment(att)"
+                    [disabled]="downloadingId === att.id"
+                  >
+                    @if (downloadingId === att.id) {
+                      <span class="spinner-border spinner-border-sm me-1"></span>
+                    }
+                    Download
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+
+        <div>
+          <div class="fq-section-label">Self-rating</div>
+          <app-star-rating [rating]="task.childSelfRating ?? 0" [readonly]="true" />
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Section 3: Review Form ── -->
+    <div class="card mb-4">
+      <div class="card-header fw-semibold">Your Review</div>
+      <div class="card-body">
+
+        @if (submitError) {
+          <div class="alert alert-danger py-2">{{ submitError }}</div>
+        }
+
+        <div class="mb-4">
+          <label class="form-label">
+            Rating <span class="text-danger">*</span>
+          </label>
+          <app-star-rating [(rating)]="parentRating" />
+
+          @if (parentRating > 0) {
+            <div class="mt-2 text-secondary-fq small">
+              Rating {{ parentRating }}/5 on a {{ task.tokenValue }}-token task
+              &rarr; you will award <strong class="text-token">{{ tokenPreview }} tokens</strong>
+            </div>
+          }
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">
+            Comment <span class="text-secondary-fq fw-normal">(optional)</span>
+          </label>
+          <textarea
+            class="form-control"
+            rows="3"
+            placeholder="Leave feedback for the child..."
+            [(ngModel)]="parentComment"
+          ></textarea>
+        </div>
+
+        <button
+          class="btn btn-primary"
+          (click)="submitReview()"
+          [disabled]="submitting"
+        >
+          @if (submitting) { <span class="spinner-border spinner-border-sm me-2"></span> }
+          Submit Review
+        </button>
+
+      </div>
+    </div>
+
+  }
+</div>

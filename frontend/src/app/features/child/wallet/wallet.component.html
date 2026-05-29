@@ -1,0 +1,51 @@
+<app-child-nav />
+
+<div class="fq-page">
+
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="spinner-border fq-spinner" role="status"></div>
+    </div>
+  } @else if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  } @else if (wallet) {
+
+    <!-- Token balance -->
+    <div class="fq-card mb-4 text-center">
+      <div class="fq-section-label mb-1">Your tokens</div>
+      <div class="fq-token-display">{{ wallet.tokens }}</div>
+    </div>
+
+    <!-- Purchased rewards -->
+    @if (wallet.purchasedRewards.length === 0) {
+      <div class="fq-empty-state">
+        <div class="fq-empty-icon">🛍️</div>
+        <p>You haven't bought any rewards yet.</p>
+        <a routerLink="/child/rewards" class="btn btn-primary btn-sm">Go to Reward Market</a>
+      </div>
+    } @else {
+      <h6 class="fq-section-label">Purchased Rewards</h6>
+      <div class="d-flex flex-column gap-3">
+        @for (purchase of wallet.purchasedRewards; track purchase.id) {
+          <div class="fq-card">
+            <div class="d-flex justify-content-between align-items-start mb-1">
+              <h6 class="fw-semibold mb-0">{{ purchase.reward.title }}</h6>
+              <span class="ms-2 flex-shrink-0" [ngClass]="statusBadgeClass(purchase.status)">
+                {{ statusLabel(purchase.status) }}
+              </span>
+            </div>
+            <p class="text-secondary-fq small mb-2">{{ purchase.reward.description }}</p>
+            <div class="d-flex flex-wrap gap-3 text-secondary-fq small">
+              <span class="fq-token-badge d-inline-flex">{{ purchase.reward.tokenCost }}</span>
+              <span>Purchased: {{ purchase.purchasedAt | date:'mediumDate' }}</span>
+              @if (purchase.redeemedAt) {
+                <span>Redeemed: {{ purchase.redeemedAt | date:'mediumDate' }}</span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+  }
+</div>

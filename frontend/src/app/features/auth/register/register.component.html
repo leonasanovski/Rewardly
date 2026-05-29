@@ -1,0 +1,99 @@
+<div class="min-vh-100 d-flex align-items-center justify-content-center bg-fq py-4">
+  <div class="card auth-card">
+    <div class="card-body p-4">
+      <h2 class="card-title text-center mb-1 fw-bold app-brand">Rewardly</h2>
+      <p class="text-center text-secondary-fq mb-4">Create a parent account</p>
+
+      @if (error) {
+        <div class="alert alert-danger py-2">{{ error }}</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <input
+            type="text"
+            class="form-control"
+            [class.is-invalid]="isInvalid('fullName')"
+            formControlName="fullName"
+            placeholder="Your full name"
+          />
+          <div class="invalid-feedback">
+            @if (field('fullName')?.errors?.['required']) { Full name is required. }
+            @if (field('fullName')?.errors?.['minlength']) { At least 2 characters. }
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            [class.is-invalid]="isInvalid('email')"
+            formControlName="email"
+            placeholder="you@example.com"
+          />
+          <div class="invalid-feedback">
+            @if (field('email')?.errors?.['required']) { Email is required. }
+            @if (field('email')?.errors?.['email']) { Enter a valid email. }
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">EMBG <small class="text-secondary-fq">(13-digit national ID)</small></label>
+          <input
+            type="text"
+            class="form-control"
+            [class.is-invalid]="isInvalid('embg')"
+            formControlName="embg"
+            placeholder="1234567890123"
+            maxlength="13"
+          />
+          <div class="invalid-feedback">
+            @if (field('embg')?.errors?.['required']) { EMBG is required. }
+            @if (field('embg')?.errors?.['pattern']) { Must be exactly 13 digits. }
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            [class.is-invalid]="isInvalid('password')"
+            formControlName="password"
+            placeholder="Min 6 characters"
+          />
+          <div class="invalid-feedback">
+            @if (field('password')?.errors?.['required']) { Password is required. }
+            @if (field('password')?.errors?.['minlength']) { At least 6 characters. }
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Confirm Password</label>
+          <input
+            type="password"
+            class="form-control"
+            [class.is-invalid]="isInvalid('confirmPassword') || (form.errors?.['mismatch'] && field('confirmPassword')?.touched)"
+            formControlName="confirmPassword"
+            placeholder="Repeat password"
+          />
+          <div class="invalid-feedback">
+            @if (field('confirmPassword')?.errors?.['required']) { Please confirm your password. }
+            @if (form.errors?.['mismatch']) { Passwords do not match. }
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100" [disabled]="loading">
+          @if (loading) { <span class="spinner-border spinner-border-sm me-2"></span> }
+          Create Account
+        </button>
+      </form>
+
+      <p class="text-center mt-3 mb-0 text-secondary-fq">
+        Already have an account? <a routerLink="/auth/login">Sign in</a>
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<nav class="navbar navbar-expand navbar-light">
+  <div class="container">
+    <span class="navbar-brand fw-bold">Rewardly</span>
+    <ul class="navbar-nav me-auto">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/parent/tasks" routerLinkActive="active">Tasks</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/parent/rewards" routerLinkActive="active">Rewards</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/parent/children" routerLinkActive="active">Children</a>
+      </li>
+    </ul>
+    <div class="d-flex align-items-center gap-3">
+      <span class="text-secondary-fq small">{{ parentName }}</span>
+      <button class="btn btn-sm btn-outline-secondary" (click)="logout()">Logout</button>
+    </div>
+  </div>
+</nav>

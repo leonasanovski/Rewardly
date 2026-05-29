@@ -1,0 +1,47 @@
+<div class="min-vh-100 d-flex align-items-center justify-content-center bg-fq">
+  <div class="card auth-card">
+    <div class="card-body p-4">
+      <h2 class="card-title text-center mb-1 fw-bold app-brand">Rewardly</h2>
+      <p class="text-center text-secondary-fq mb-4">Sign in to your account</p>
+
+      @if (error) {
+        <div class="alert alert-danger py-2">{{ error }}</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="mb-3">
+          <label class="form-label">Email or Username</label>
+          <input
+            type="text"
+            class="form-control"
+            [class.is-invalid]="form.get('identifier')?.invalid && form.get('identifier')?.touched"
+            formControlName="identifier"
+            placeholder="Enter email or username"
+          />
+          <div class="invalid-feedback">This field is required.</div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            [class.is-invalid]="form.get('password')?.invalid && form.get('password')?.touched"
+            formControlName="password"
+            placeholder="Enter password"
+          />
+          <div class="invalid-feedback">This field is required.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100" [disabled]="loading">
+          @if (loading) { <span class="spinner-border spinner-border-sm me-2"></span> }
+          Sign In
+        </button>
+      </form>
+
+      <p class="text-center mt-3 mb-0 text-secondary-fq">
+        New parent? <a routerLink="/auth/register">Create account</a>
+      </p>
+    </div>
+  </div>
+</div>

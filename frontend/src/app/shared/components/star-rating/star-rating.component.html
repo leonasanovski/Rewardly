@@ -1,0 +1,26 @@
+@if (readonly) {
+  <div class="fq-stars d-inline-flex align-items-center gap-2">
+    @for (star of stars; track star) {
+      <span [class.star-filled]="isActive(star)" [class.star-empty]="!isActive(star)">&#9733;</span>
+    }
+    @if (rating) {
+      <span class="text-secondary-fq small ms-1">{{ rating }} / 5</span>
+    }
+  </div>
+} @else {
+  <div class="d-flex align-items-center gap-2">
+    <div class="fq-stars-input">
+      @for (star of stars; track star) {
+        <span
+          [class.active]="isActive(star)"
+          (click)="setRating(star)"
+          (mouseenter)="setHovered(star)"
+          (mouseleave)="clearHover()"
+        >&#9733;</span>
+      }
+    </div>
+    @if (hovered || rating) {
+      <span class="text-secondary-fq small fst-italic">{{ labels[hovered || rating] }}</span>
+    }
+  </div>
+}

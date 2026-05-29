@@ -1,0 +1,41 @@
+# Gradle
+.gradle/
+backend/build/
+backend/.gradle/
+*.jar
+*.war
+*.class
+
+# Kotlin
+*.kotlin_module
+backend/src/main/resources/application-local.yaml
+backend/src/main/resources/application-prod.yaml
+
+# Node / Angular
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# Uploads (runtime file storage)
+uploads/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+*.suo
+*.user
+.project
+.classpath
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment / secrets
+*.env
+.env*
+secrets.*

@@ -1,0 +1,215 @@
+<app-parent-nav />
+
+<div class="fq-page">
+
+  <!-- Top bar -->
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-4">
+    <select class="form-select form-select-sm w-auto" [(ngModel)]="filterChildId">
+      <option value="">All children</option>
+      @for (child of children; track child.id) {
+        <option [value]="child.id">{{ child.fullName }}</option>
+      }
+    </select>
+
+    <select class="form-select form-select-sm w-auto" [(ngModel)]="filterStatus">
+      <option value="">All statuses</option>
+      @for (s of allStatuses; track s) {
+        <option [value]="s">{{ statusLabel(s) }}</option>
+      }
+    </select>
+
+    <button class="btn btn-primary btn-sm ms-auto" (click)="openCreateModal()">
+      + Create Task
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="spinner-border fq-spinner" role="status"></div>
+    </div>
+  } @else if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  } @else if (filteredTasks.length === 0) {
+    <div class="fq-empty-state">
+      <div class="fq-empty-icon">📋</div>
+      <p>No tasks found. Create the first one!</p>
+    </div>
+  } @else {
+
+    <div class="row g-3">
+      @for (task of filteredTasks; track task.id) {
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div
+            class="fq-card-clickable h-100"
+            [class.fq-card-highlight]="task.status === 'DONE'"
+            (click)="onCardClick(task)"
+          >
+            <!-- Title + status -->
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="mb-0 fw-semibold">{{ task.title }}</h6>
+              <span class="ms-2 flex-shrink-0" [ngClass]="statusBadgeClass(task.status)">
+                {{ statusLabel(task.status) }}
+              </span>
+            </div>
+
+            <!-- Child name -->
+            <div class="text-secondary-fq small mb-2">{{ task.assignedTo.fullName }}</div>
+
+            <!-- Category -->
+            <span [ngClass]="categoryBadgeClass(task.category)">{{ categoryLabels[task.category] }}</span>
+
+            <!-- Meta -->
+            <div class="mt-2">
+              <span class="fq-token-badge d-inline-flex">{{ task.tokenValue }}</span>
+            </div>
+            @if (task.startedAt) {
+              <div class="text-secondary-fq small mt-1">Started: {{ task.startedAt | date:'shortDate' }}</div>
+            }
+            @if (task.finishedAt) {
+              <div class="text-secondary-fq small">Finished: {{ task.finishedAt | date:'shortDate' }}</div>
+            }
+
+            @if (task.status === 'DONE') {
+              <div class="mt-2">
+                <span class="fq-badge-in-progress">Needs review</span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- Create Task Modal                           -->
+<!-- ═══════════════════════════════════════════ -->
+@if (showCreateModal) {
+  <div class="modal-overlay" (click)="showCreateModal = false"></div>
+  <div class="modal fq-modal d-block" (click)="$event.stopPropagation()">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-semibold">Create Task</h5>
+          <button type="button" class="btn-close" (click)="showCreateModal = false"></button>
+        </div>
+        <div class="modal-body">
+          @if (createError) {
+            <div class="alert alert-danger py-2">{{ createError }}</div>
+          }
+
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="createForm.title" placeholder="Task title" />
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Description <span class="text-danger">*</span></label>
+              <textarea class="form-control" rows="3" [(ngModel)]="createForm.description" placeholder="What should the child do?"></textarea>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Category <span class="text-danger">*</span></label>
+              <select class="form-select" [(ngModel)]="createForm.category">
+                <option value="">Select category...</option>
+                @for (cat of categories; track cat) {
+                  <option [value]="cat">{{ categoryLabels[cat] }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Token value <span class="text-danger">*</span></label>
+              <input type="number" class="form-control" [(ngModel)]="createForm.tokenValue" min="1" />
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Due date note <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="createForm.dueDateNote" placeholder="e.g. By Friday evening" />
+            </div>
+
+            <div class="col-12">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="assignToAll"
+                  [(ngModel)]="createForm.assignToAll" />
+                <label class="form-check-label" for="assignToAll">Assign to all children</label>
+              </div>
+            </div>
+
+            @if (!createForm.assignToAll) {
+              <div class="col-12">
+                <label class="form-label">Assign to child <span class="text-danger">*</span></label>
+                <select class="form-select" [(ngModel)]="createForm.assignedToId">
+                  <option value="">Select child...</option>
+                  @for (child of children; track child.id) {
+                    <option [value]="child.id">{{ child.fullName }}</option>
+                  }
+                </select>
+              </div>
+            }
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="showCreateModal = false">Cancel</button>
+          <button class="btn btn-primary" (click)="createTask()" [disabled]="creating">
+            @if (creating) { <span class="spinner-border spinner-border-sm me-2"></span> }
+            Create Task
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- Task Detail Modal (read-only)               -->
+<!-- ═══════════════════════════════════════════ -->
+@if (showDetailModal && detailTask) {
+  <div class="modal-overlay" (click)="showDetailModal = false"></div>
+  <div class="modal fq-modal d-block" (click)="$event.stopPropagation()">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-semibold">{{ detailTask.title }}</h5>
+          <button type="button" class="btn-close" (click)="showDetailModal = false"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <div class="fq-section-label">Assigned to</div>
+            <div>{{ detailTask.assignedTo.fullName }}</div>
+          </div>
+          <div class="mb-3">
+            <div class="fq-section-label">Description</div>
+            <p class="mb-0">{{ detailTask.description }}</p>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col-6">
+              <div class="fq-section-label">Category</div>
+              <span [ngClass]="categoryBadgeClass(detailTask.category)">{{ categoryLabels[detailTask.category] }}</span>
+            </div>
+            <div class="col-6">
+              <div class="fq-section-label">Token value</div>
+              <span class="fq-token-badge d-inline-flex">{{ detailTask.tokenValue }}</span>
+            </div>
+            <div class="col-12">
+              <div class="fq-section-label">Due date note</div>
+              <div class="fq-info-block">{{ detailTask.dueDateNote }}</div>
+            </div>
+          </div>
+          @if (detailTask.startedAt) {
+            <div class="text-secondary-fq small">Started: {{ detailTask.startedAt | date:'medium' }}</div>
+          }
+          <div class="mt-3">
+            <span [ngClass]="statusBadgeClass(detailTask.status)">
+              {{ statusLabel(detailTask.status) }}
+            </span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="showDetailModal = false">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

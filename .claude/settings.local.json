@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gradle wrapper *)",
+      "Bash(./gradlew compileKotlin)",
+      "Bash(ng --help)",
+      "Bash(npm --version)",
+      "Read(//Users/leonmacbook/FINKI/psihologija/**)",
+      "Bash(./gradlew bootRun)",
+      "Bash(echo \"Backend PID: $!\")",
+      "Bash(npx ng *)",
+      "Bash(echo \"Frontend PID: $!\")"
+    ]
+  }
+}

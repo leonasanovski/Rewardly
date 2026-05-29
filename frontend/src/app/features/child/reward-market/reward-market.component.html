@@ -1,0 +1,86 @@
+<app-child-nav />
+
+<div class="fq-page">
+
+  <!-- Token balance -->
+  @if (!loading && !error) {
+    <div class="d-flex align-items-center gap-3 mb-4 p-3 fq-card token-balance-card">
+      <div>
+        <div class="fq-section-label mb-1">Your tokens</div>
+        <div class="fq-token-display">{{ tokens }}</div>
+      </div>
+    </div>
+  }
+
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="spinner-border fq-spinner" role="status"></div>
+    </div>
+  } @else if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  } @else if (rewards.length === 0) {
+    <div class="fq-empty-state">
+      <div class="fq-empty-icon">🎁</div>
+      <p>No rewards available yet.<br>Ask your parent to add some!</p>
+    </div>
+  } @else {
+    <div class="row g-3">
+      @for (reward of rewards; track reward.id) {
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div
+            class="fq-card h-100 d-flex flex-column"
+            [class.unaffordable]="!canAfford(reward)"
+          >
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="fw-semibold mb-0">{{ reward.title }}</h6>
+              <span class="fq-token-badge ms-2 flex-shrink-0">{{ reward.tokenCost }}</span>
+            </div>
+            <p class="text-secondary-fq small flex-grow-1">{{ reward.description }}</p>
+
+            @if (buyErrors[reward.id]) {
+              <div class="alert alert-danger py-1 small mb-2">{{ buyErrors[reward.id] }}</div>
+            }
+
+            <!-- Confirmation state -->
+            @if (confirmingId === reward.id) {
+              <div class="mt-auto">
+                <p class="small text-secondary-fq mb-2">
+                  Buy <strong>{{ reward.title }}</strong> for <strong>{{ reward.tokenCost }} tokens</strong>?
+                </p>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-success btn-sm" (click)="confirmBuy(reward)" [disabled]="buying">
+                    @if (buying) { <span class="spinner-border spinner-border-sm me-1"></span> }
+                    Confirm
+                  </button>
+                  <button class="btn btn-outline-secondary btn-sm" (click)="cancelBuy()" [disabled]="buying">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            } @else {
+              <div class="mt-auto pt-2">
+                @if (canAfford(reward)) {
+                  <button class="btn btn-primary btn-sm w-100" (click)="startBuy(reward)">Buy</button>
+                } @else {
+                  <div class="text-danger small mb-1">You need {{ shortfall(reward) }} more tokens</div>
+                  <button class="btn btn-outline-secondary btn-sm w-100" disabled>Buy</button>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<!-- Toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3 fq-toast-container">
+  <div
+    class="toast align-items-center text-bg-success border-0"
+    [class.show]="showToast"
+    role="alert"
+  >
+    <div class="toast-body fw-semibold">{{ toastMessage }}</div>
+  </div>
+</div>

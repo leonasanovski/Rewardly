@@ -1,0 +1,480 @@
+:root {
+  --fq-bg:             #FAFDE8;
+  --fq-surface:        #FFFFFF;
+  --fq-surface-alt:    #F5F0E8;
+
+  --fq-primary:        #7FA8D4;
+  --fq-primary-dark:   #4A7DB5;
+  --fq-primary-light:  #C8D8F0;
+
+  --fq-token:          #FFB830;
+  --fq-token-bg:       #FFF3CD;
+
+  --fq-text-primary:   #2C2C2C;
+  --fq-text-secondary: #6B7280;
+  --fq-text-muted:     #9CA3AF;
+
+  --fq-border:         #E5E7EB;
+
+  --fq-radius-sm:      4px;
+  --fq-radius-md:      4px;
+  --fq-radius-lg:      4px;
+  --fq-radius-xl:      4px;
+
+  --fq-shadow-sm:      0 1px 4px rgba(0, 0, 0, 0.06);
+  --fq-shadow-md:      0 2px 12px rgba(0, 0, 0, 0.08);
+  --fq-shadow-lg:      0 4px 24px rgba(0, 0, 0, 0.12);
+
+  --fq-open:           #C8D8F0;
+  --fq-open-text:      #1565C0;
+  --fq-in-progress:    #FFE8A3;
+  --fq-in-progress-text: #B8860B;
+  --fq-done:           #B8E6C8;
+  --fq-done-text:      #2E7D52;
+  --fq-reviewed:       #D8C8F0;
+  --fq-reviewed-text:  #6B4DB5;
+
+  --fq-available:      #B8E6C8;
+  --fq-available-text: #2E7D52;
+  --fq-redeemed:       #E0E0E0;
+  --fq-redeemed-text:  #757575;
+}
+
+// ── Base ──────────────────────────────────────────────────────────────────────
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: var(--fq-bg);
+  color: var(--fq-text-primary);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  color: var(--fq-text-primary);
+}
+
+a {
+  color: var(--fq-primary-dark);
+  text-decoration: none;
+  &:hover { color: var(--fq-primary); }
+}
+
+// ── Bootstrap Overrides ───────────────────────────────────────────────────────
+
+.btn-primary {
+  background-color: var(--fq-primary-dark);
+  border-color: var(--fq-primary-dark);
+  font-weight: 600;
+  border-radius: var(--fq-radius-md);
+  padding: 8px 20px;
+
+  &:hover, &:focus {
+    background-color: var(--fq-primary);
+    border-color: var(--fq-primary);
+  }
+}
+
+.btn-outline-primary {
+  color: var(--fq-primary-dark);
+  border-color: var(--fq-primary-dark);
+  border-radius: var(--fq-radius-md);
+  font-weight: 600;
+
+  &:hover {
+    background-color: var(--fq-primary-dark);
+    border-color: var(--fq-primary-dark);
+  }
+}
+
+.btn {
+  border-radius: var(--fq-radius-md);
+  font-weight: 600;
+  font-family: 'Nunito', sans-serif;
+}
+
+.form-control, .form-select {
+  border-radius: var(--fq-radius-md);
+  border-color: var(--fq-border);
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+
+  &:focus {
+    border-color: var(--fq-primary);
+    box-shadow: 0 0 0 3px rgba(127, 168, 212, 0.25);
+  }
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--fq-text-primary);
+  margin-bottom: 6px;
+}
+
+.card {
+  border: 1px solid var(--fq-border);
+  border-radius: var(--fq-radius-lg);
+  box-shadow: var(--fq-shadow-md);
+  background-color: var(--fq-surface);
+}
+
+.modal-content {
+  border-radius: var(--fq-radius-xl);
+  border: none;
+  box-shadow: var(--fq-shadow-lg);
+}
+
+.navbar {
+  background-color: var(--fq-surface) !important;
+  box-shadow: var(--fq-shadow-sm);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+
+.toast {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  &.show { opacity: 1; }
+}
+
+// ── Cards ─────────────────────────────────────────────────────────────────────
+
+.fq-card {
+  background-color: var(--fq-surface);
+  border: 1px solid var(--fq-border);
+  border-radius: var(--fq-radius-lg);
+  box-shadow: var(--fq-shadow-md);
+  padding: 20px;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--fq-shadow-lg);
+  }
+}
+
+.fq-card-clickable {
+  @extend .fq-card;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--fq-shadow-lg);
+  }
+}
+
+.fq-card-highlight {
+  @extend .fq-card;
+  border: 2px solid var(--fq-done-text);
+  background-color: #F0FBF4;
+}
+
+// ── Status Badges ─────────────────────────────────────────────────────────────
+
+.fq-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: var(--fq-radius-xl);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.fq-badge-open {
+  @extend .fq-badge;
+  background-color: var(--fq-open);
+  color: var(--fq-open-text);
+}
+
+.fq-badge-in-progress {
+  @extend .fq-badge;
+  background-color: var(--fq-in-progress);
+  color: var(--fq-in-progress-text);
+}
+
+.fq-badge-done {
+  @extend .fq-badge;
+  background-color: var(--fq-done);
+  color: var(--fq-done-text);
+}
+
+.fq-badge-reviewed {
+  @extend .fq-badge;
+  background-color: var(--fq-reviewed);
+  color: var(--fq-reviewed-text);
+}
+
+.fq-badge-available {
+  @extend .fq-badge;
+  background-color: var(--fq-available);
+  color: var(--fq-available-text);
+}
+
+.fq-badge-redeemed {
+  @extend .fq-badge;
+  background-color: var(--fq-redeemed);
+  color: var(--fq-redeemed-text);
+}
+
+// ── Category Badges ───────────────────────────────────────────────────────────
+
+.fq-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: var(--fq-radius-xl);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.fq-category-sport {
+  @extend .fq-category;
+  background-color: #FFE0B2;
+  color: #E65100;
+}
+
+.fq-category-study {
+  @extend .fq-category;
+  background-color: #C8D8F0;
+  color: #1565C0;
+}
+
+.fq-category-chores {
+  @extend .fq-category;
+  background-color: #FFF9C4;
+  color: #F57F17;
+}
+
+.fq-category-health {
+  @extend .fq-category;
+  background-color: #C8E6C9;
+  color: #2E7D32;
+}
+
+.fq-category-creative {
+  @extend .fq-category;
+  background-color: #E1BEE7;
+  color: #6A1B9A;
+}
+
+.fq-category-social {
+  @extend .fq-category;
+  background-color: #FFCCBC;
+  color: #BF360C;
+}
+
+.fq-category-digital {
+  @extend .fq-category;
+  background-color: #B2EBF2;
+  color: #00695C;
+}
+
+// ── Token Icon ────────────────────────────────────────────────────────────────
+
+// Shared mixin for the golden "T" circle
+%token-circle-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #FFD060, #F09000);
+  color: #fff;
+  font-weight: 900;
+  font-family: 'Nunito', sans-serif;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+// Standalone icon — used in the nav bar
+.fq-token-icon {
+  @extend %token-circle-base;
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+  box-shadow: 0 1px 4px rgba(240, 144, 0, 0.35);
+
+  &::before { content: 'T'; }
+}
+
+// ── Token Badge ───────────────────────────────────────────────────────────────
+
+.fq-token-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--fq-token-bg);
+  color: var(--fq-token);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 4px 10px 4px 4px;
+  border-radius: var(--fq-radius-xl);
+  border: 1px solid #FFD580;
+
+  &::before {
+    @extend %token-circle-base;
+    content: 'T';
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+  }
+}
+
+.fq-token-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--fq-token);
+
+  &::before {
+    @extend %token-circle-base;
+    content: 'T';
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+    box-shadow: 0 2px 8px rgba(240, 144, 0, 0.35);
+  }
+}
+
+// ── Nav Token Display ─────────────────────────────────────────────────────────
+
+.fq-nav-tokens {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--fq-token);
+}
+
+// ── Page Layout ───────────────────────────────────────────────────────────────
+
+.fq-page {
+  padding: 24px 16px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.fq-page-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--fq-text-primary);
+  margin-bottom: 20px;
+}
+
+.fq-section-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--fq-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 12px;
+}
+
+.fq-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--fq-text-muted);
+
+  .fq-empty-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 15px;
+    font-weight: 500;
+  }
+}
+
+// ── Star Rating ───────────────────────────────────────────────────────────────
+
+.fq-stars {
+  display: inline-flex;
+  gap: 4px;
+  font-size: 22px;
+
+  .star-filled { color: var(--fq-token); }
+  .star-empty  { color: var(--fq-border); }
+}
+
+.fq-stars-input {
+  display: flex;
+  gap: 6px;
+  font-size: 28px;
+  cursor: pointer;
+
+  span {
+    transition: transform 0.1s ease;
+    &:hover { transform: scale(1.2); }
+    &.active { color: var(--fq-token); }
+    &:not(.active) { color: var(--fq-border); }
+  }
+}
+
+// ── Utility Classes ───────────────────────────────────────────────────────────
+
+.text-muted-fq     { color: var(--fq-text-muted) !important; }
+.text-secondary-fq { color: var(--fq-text-secondary) !important; }
+.text-token        { color: var(--fq-token) !important; font-weight: 700; }
+.text-award        { color: var(--fq-done-text); font-weight: 700; }
+
+.bg-fq      { background-color: var(--fq-bg) !important; }
+.bg-surface { background-color: var(--fq-surface) !important; }
+
+.fq-divider {
+  border: none;
+  border-top: 1px solid var(--fq-border);
+  margin: 20px 0;
+}
+
+.fq-info-block {
+  background-color: var(--fq-primary-light);
+  border-left: 4px solid var(--fq-primary-dark);
+  border-radius: 0 var(--fq-radius-md) var(--fq-radius-md) 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--fq-primary-dark);
+}
+
+// ── Spinner ───────────────────────────────────────────────────────────────────
+
+.fq-spinner { color: var(--fq-primary); }
+
+// ── Token badge size modifiers ────────────────────────────────────────────────
+
+.fq-token-badge-sm {
+  font-size: 11px;
+  padding: 2px 8px;
+}
+
+.fq-token-badge-lg {
+  font-size: 16px;
+  padding: 6px 16px;
+}
+
+// ── Section count badge ───────────────────────────────────────────────────────
+
+.fq-badge-count {
+  font-size: 11px;
+  padding: 2px 8px;
+}
+
+// ── Toast container ───────────────────────────────────────────────────────────
+
+.fq-toast-container {
+  z-index: 9999;
+}
+
+// ── App brand (navbar) ────────────────────────────────────────────────────────
+
+.app-brand {
+  color: var(--fq-primary-dark) !important;
+}
