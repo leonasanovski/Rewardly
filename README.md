@@ -2,7 +2,7 @@
 
 ## Created by:
 - Leon Asanovski
-- Petar Avramovikj
+- Petar Avramovikj (233015)
 
 Rewardly is a family task-and-reward app designed for children aged 11–15 and their parents. Parents create tasks for their children, children complete and submit them, and parents review the submissions to award tokens. Children can then spend those tokens in a reward market to claim prizes set by their parent.
 
